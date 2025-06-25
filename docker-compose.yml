@@ -1,0 +1,15 @@
+services:
+  poker-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poker-api
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - poker-network
+
+networks:
+  poker-network:
+    driver: bridge
