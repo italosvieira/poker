@@ -7,6 +7,7 @@ import { HandWithRank } from '../interfaces/hand-with-rank.interface';
 import { sortHandWithRank } from '../utils/sort-hand-with-rank.util';
 import { getRankValue } from '../utils/get-rank-value.util';
 import { RANK_ORDER } from '../utils/rank-order.util';
+import { HandWithRankDto } from '../dtos/hand-with-rank.dto';
 
 @Injectable()
 export class PokerService {
@@ -29,7 +30,7 @@ export class PokerService {
   // My logic here was tro group the type of hands
   // Then sort the hands withing the groups
   // Then flat all the groups in an ordered array and add the rank of each hand
-  public evaluate(hands: HandDto[]): any {
+  public evaluate(hands: HandDto[]): HandWithRankDto[] {
     const evaluatedCards = new Set<string>();
     const handsGroupedByRank = new Map<number, HandWithRank[]>([
       [1, []], // Straight Flush
@@ -104,7 +105,7 @@ export class PokerService {
     let rank: number = 0;
     let lastHandWithRank: HandWithRank | null = null;
 
-    const finalArray: any[] = [];
+    const finalArray: HandWithRankDto[] = [];
 
     for (const handsWithRankGrouped of Array.from(
       handsGroupedByRank.values(),

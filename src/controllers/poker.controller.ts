@@ -2,6 +2,7 @@ import { Body, Controller, Get, ParseArrayPipe, Post } from '@nestjs/common';
 import { PokerService } from '../services/poker.service';
 import { HandDto } from '../dtos/hand.dto';
 import { ApiBody, ApiOkResponse } from '@nestjs/swagger';
+import { HandWithRankDto } from '../dtos/hand-with-rank.dto';
 
 @Controller('/poker')
 export class PokerController {
@@ -20,12 +21,12 @@ export class PokerController {
   @Post('/evaluate')
   @ApiBody({ type: [HandDto] })
   @ApiOkResponse({
-    type: [HandDto],
+    type: [HandWithRankDto],
     description: 'Evaluates an array of poker hands and returns the output', // TODO
   })
   evaluate(
     @Body(new ParseArrayPipe({ items: HandDto })) hands: HandDto[],
-  ): any {
+  ): HandWithRankDto[] {
     return this.pokerService.evaluate(hands);
   }
 }
