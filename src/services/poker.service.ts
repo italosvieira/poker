@@ -113,8 +113,10 @@ export class PokerService {
       for (const handWithRank of handsWithRankGrouped.sort(sortHandWithRank)) {
         if (
           !lastHandWithRank ||
-          (handWithRank.handRank !== lastHandWithRank.handRank &&
-            handWithRank.kickerRank !== lastHandWithRank.kickerRank)
+          handWithRank.handRankFirstPart < lastHandWithRank.handRankFirstPart ||
+          handWithRank.handRankSecondPart <
+            lastHandWithRank.handRankSecondPart ||
+          handWithRank.kickerRank < lastHandWithRank.kickerRank
         ) {
           rank++;
         }
@@ -168,13 +170,14 @@ export class PokerService {
 
     handWithRanks.push({
       cards,
-      handRank: cardsGrouped
+      handRankFirstPart: cardsGrouped
         .find((cards: CardDto[]): boolean => cards.length === handRankSize)!
         .reduce(
           (accumulator: number, currentValue: CardDto): number =>
             accumulator + getRankValue(currentValue.rank),
           0,
         ),
+      handRankSecondPart: 0,
       kickerRank: cardsGrouped
         .find((cards: CardDto[]): boolean => cards.length === kickerRankSize)!
         .reduce(
@@ -190,10 +193,6 @@ export class PokerService {
     handsGroupedByRank: Map<number, HandWithRank[]>,
     cards: CardDto[],
   ): void {
-    let handRankSize: number;
-    let kickerRankSize: number;
-    let handWithRanks: HandWithRank[];
-
     const cardsGrouped: CardDto[][] = Array.from(cardsGroupedByRank.values());
 
     if (
@@ -202,35 +201,53 @@ export class PokerService {
       cardsGrouped[2].length === 3
     ) {
       // three of a kind
-      handWithRanks = handsGroupedByRank.get(6)!;
-      handRankSize = 3;
-      kickerRankSize = 1;
+      handsGroupedByRank.get(6)!.push({
+        cards,
+        handRankFirstPart: cardsGrouped
+          .filter((cards: CardDto[]): boolean => cards.length === 3)
+          .flat()
+          .reduce(
+            (accumulator: number, currentValue: CardDto): number =>
+              accumulator + getRankValue(currentValue.rank),
+            0,
+          ),
+        handRankSecondPart: 0,
+        kickerRank: cardsGrouped
+          .filter((cards: CardDto[]): boolean => cards.length === 1)
+          .flat()
+          .reduce(
+            (accumulator: number, currentValue: CardDto): number =>
+              accumulator + getRankValue(currentValue.rank),
+            0,
+          ),
+      });
     } else {
       // two pair
-      handWithRanks = handsGroupedByRank.get(7)!;
-      handRankSize = 2;
-      kickerRankSize = 1;
-    }
+      const sortedHandPairs: CardDto[] = cardsGrouped
+        .filter((cards: CardDto[]): boolean => cards.length === 2)
+        .flat()
+        .sort((a: CardDto, b: CardDto): number => {
+          return RANK_ORDER.indexOf(a.rank) - RANK_ORDER.indexOf(b.rank);
+        });
 
-    handWithRanks.push({
-      cards,
-      handRank: cardsGrouped
-        .filter((cards: CardDto[]): boolean => cards.length === handRankSize)
-        .flat()
-        .reduce(
-          (accumulator: number, currentValue: CardDto): number =>
-            accumulator + getRankValue(currentValue.rank),
-          0,
-        ),
-      kickerRank: cardsGrouped
-        .filter((cards: CardDto[]): boolean => cards.length === kickerRankSize)
-        .flat()
-        .reduce(
-          (accumulator: number, currentValue: CardDto): number =>
-            accumulator + getRankValue(currentValue.rank),
-          0,
-        ),
-    });
+      handsGroupedByRank.get(7)!.push({
+        cards,
+        handRankFirstPart:
+          getRankValue(sortedHandPairs[2].rank) +
+          getRankValue(sortedHandPairs[3].rank),
+        handRankSecondPart:
+          getRankValue(sortedHandPairs[0].rank) +
+          getRankValue(sortedHandPairs[1].rank),
+        kickerRank: cardsGrouped
+          .filter((cards: CardDto[]): boolean => cards.length === 1)
+          .flat()
+          .reduce(
+            (accumulator: number, currentValue: CardDto): number =>
+              accumulator + getRankValue(currentValue.rank),
+            0,
+          ),
+      });
+    }
   }
 
   private calculateHandWithRank4(
@@ -242,7 +259,7 @@ export class PokerService {
 
     handsGroupedByRank.get(8)!.push({
       cards,
-      handRank: cardsGrouped
+      handRankFirstPart: cardsGrouped
         .filter((cards: CardDto[]): boolean => cards.length === 2)
         .flat()
         .reduce(
@@ -250,6 +267,7 @@ export class PokerService {
             accumulator + getRankValue(currentValue.rank),
           0,
         ),
+      handRankSecondPart: 0,
       kickerRank: cardsGrouped
         .filter((cards: CardDto[]): boolean => cards.length === 1)
         .flat()
@@ -310,12 +328,15 @@ export class PokerService {
 
     handWithRanks.push({
       cards,
-      handRank: cardsGrouped.reduce(
-        (accumulator: number, currentValue: CardDto): number =>
-          accumulator + getRankValue(currentValue.rank),
-        0,
-      ),
-      kickerRank: 0,
+      handRankFirstPart: getRankValue(cardsGrouped[4].rank),
+      handRankSecondPart: 0,
+      kickerRank: cardsGrouped
+        .slice(0, 4)
+        .reduce(
+          (accumulator: number, currentValue: CardDto): number =>
+            accumulator + getRankValue(currentValue.rank),
+          0,
+        ),
     });
   }
 }

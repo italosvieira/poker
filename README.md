@@ -8,7 +8,8 @@ For swagger go to http://localhost:3000/docs
 memorization of previous hands. Just a "dumb" create poker hand endpoint.
 
 /poker/evaluate = Logic here is to evaluate each hand and give the hand a rank. The input validation is just valid array
-of valid objects with valid card ranks and suits. One extra validation is no repeated cards.
+of valid objects with valid card ranks and suits. One extra validation is no repeated cards. If there is a tie the hands
+will have the same rank.
 
 All tests in test folder. Trying to add one file for each type of hand comparing with each other type of hand.
 

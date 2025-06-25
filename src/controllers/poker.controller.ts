@@ -22,7 +22,7 @@ export class PokerController {
   @ApiBody({ type: [HandDto] })
   @ApiOkResponse({
     type: [HandWithRankDto],
-    description: 'Evaluates an array of poker hands and returns the output', // TODO
+    description: 'Evaluates an array of poker hands and returns the output',
   })
   evaluate(
     @Body(new ParseArrayPipe({ items: HandDto })) hands: HandDto[],

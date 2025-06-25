@@ -14,6 +14,8 @@ export class DeckEntity {
     return this.deck[randomInt(0, this.deck.length)];
   }
 
+  // This is just a Fisher–Yates shuffle straight from wikipedia.
+  // I just wanted to add some entropy to have less repeated cards on deal
   shuffle(): void {
     for (let i: number = this.deck.length - 1; i >= 1; i--) {
       const j: number = Math.floor(Math.random() * (i + 1));

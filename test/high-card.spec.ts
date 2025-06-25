@@ -15,6 +15,98 @@ describe('Evaluate High Card', (): void => {
   });
 
   describe('evaluate high card', (): void => {
+    it('should return high card rank 1 and high card rank 2', (): void => {
+      expect(
+        pokerService.evaluate([
+          {
+            cards: [
+              { rank: RankEnum.TWO, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.THREE, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.FIVE, suit: SuitEnum.SPADES },
+              { rank: RankEnum.ACE, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.FOUR, suit: SuitEnum.DIAMONDS },
+            ],
+          },
+          {
+            cards: [
+              { rank: RankEnum.KING, suit: SuitEnum.DIAMONDS },
+              { rank: RankEnum.QUEEN, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.JACK, suit: SuitEnum.DIAMONDS },
+              { rank: RankEnum.ACE, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.NINE, suit: SuitEnum.CLUBS },
+            ],
+          },
+        ]),
+      ).toStrictEqual([
+        {
+          rank: 1,
+          cards: [
+            { rank: 'K', suit: 'diamonds' },
+            { rank: 'Q', suit: 'hearts' },
+            { rank: 'J', suit: 'diamonds' },
+            { rank: 'A', suit: 'hearts' },
+            { rank: '9', suit: 'clubs' },
+          ],
+        },
+        {
+          rank: 2,
+          cards: [
+            { rank: '2', suit: 'clubs' },
+            { rank: '3', suit: 'hearts' },
+            { rank: '5', suit: 'spades' },
+            { rank: 'A', suit: 'clubs' },
+            { rank: '4', suit: 'diamonds' },
+          ],
+        },
+      ]);
+    });
+
+    it('should return high card tie at rank 1', (): void => {
+      expect(
+        pokerService.evaluate([
+          {
+            cards: [
+              { rank: RankEnum.TWO, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.THREE, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.FIVE, suit: SuitEnum.SPADES },
+              { rank: RankEnum.ACE, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.FOUR, suit: SuitEnum.DIAMONDS },
+            ],
+          },
+          {
+            cards: [
+              { rank: RankEnum.TWO, suit: SuitEnum.SPADES },
+              { rank: RankEnum.THREE, suit: SuitEnum.DIAMONDS },
+              { rank: RankEnum.FIVE, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.ACE, suit: SuitEnum.DIAMONDS },
+              { rank: RankEnum.FOUR, suit: SuitEnum.CLUBS },
+            ],
+          },
+        ]),
+      ).toStrictEqual([
+        {
+          rank: 1,
+          cards: [
+            { rank: '2', suit: 'clubs' },
+            { rank: '3', suit: 'hearts' },
+            { rank: '5', suit: 'spades' },
+            { rank: 'A', suit: 'clubs' },
+            { rank: '4', suit: 'diamonds' },
+          ],
+        },
+        {
+          rank: 1,
+          cards: [
+            { rank: '2', suit: 'spades' },
+            { rank: '3', suit: 'diamonds' },
+            { rank: '5', suit: 'hearts' },
+            { rank: 'A', suit: 'diamonds' },
+            { rank: '4', suit: 'clubs' },
+          ],
+        },
+      ]);
+    });
+
     it('should return one pair rank 1 and high card rank 2', (): void => {
       expect(
         pokerService.evaluate([
