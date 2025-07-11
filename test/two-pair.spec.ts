@@ -107,25 +107,25 @@ describe('Evaluate Two Pair', (): void => {
       ]);
     });
 
-    it('should return two pair rank 1 and two pair rank 2', (): void => {
+    it('should return two pair rank 1 and two pair rank 2 with defining value being the second pair', (): void => {
       expect(
         pokerService.evaluate([
           {
             cards: [
               { rank: RankEnum.ACE, suit: SuitEnum.HEARTS },
               { rank: RankEnum.ACE, suit: SuitEnum.CLUBS },
-              { rank: RankEnum.NINE, suit: SuitEnum.SPADES },
-              { rank: RankEnum.NINE, suit: SuitEnum.HEARTS },
-              { rank: RankEnum.FIVE, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.SEVEN, suit: SuitEnum.SPADES },
+              { rank: RankEnum.SEVEN, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.TWO, suit: SuitEnum.CLUBS },
             ],
           },
           {
             cards: [
-              { rank: RankEnum.KING, suit: SuitEnum.DIAMONDS },
-              { rank: RankEnum.KING, suit: SuitEnum.HEARTS },
-              { rank: RankEnum.JACK, suit: SuitEnum.SPADES },
-              { rank: RankEnum.JACK, suit: SuitEnum.HEARTS },
-              { rank: RankEnum.TEN, suit: SuitEnum.CLUBS },
+              { rank: RankEnum.ACE, suit: SuitEnum.DIAMONDS },
+              { rank: RankEnum.ACE, suit: SuitEnum.SPADES },
+              { rank: RankEnum.FIVE, suit: SuitEnum.SPADES },
+              { rank: RankEnum.FIVE, suit: SuitEnum.HEARTS },
+              { rank: RankEnum.FOUR, suit: SuitEnum.CLUBS },
             ],
           },
         ]),
@@ -135,19 +135,19 @@ describe('Evaluate Two Pair', (): void => {
           cards: [
             { rank: 'A', suit: 'hearts' },
             { rank: 'A', suit: 'clubs' },
-            { rank: '9', suit: 'spades' },
-            { rank: '9', suit: 'hearts' },
-            { rank: '5', suit: 'clubs' },
+            { rank: '7', suit: 'spades' },
+            { rank: '7', suit: 'hearts' },
+            { rank: '2', suit: 'clubs' },
           ],
         },
         {
           rank: 2,
           cards: [
-            { rank: 'K', suit: 'diamonds' },
-            { rank: 'K', suit: 'hearts' },
-            { rank: 'J', suit: 'spades' },
-            { rank: 'J', suit: 'hearts' },
-            { rank: '10', suit: 'clubs' },
+            { rank: 'A', suit: 'diamonds' },
+            { rank: 'A', suit: 'spades' },
+            { rank: '5', suit: 'spades' },
+            { rank: '5', suit: 'hearts' },
+            { rank: '4', suit: 'clubs' },
           ],
         },
       ]);

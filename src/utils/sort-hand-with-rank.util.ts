@@ -10,6 +10,14 @@ export function sortHandWithRank(a: HandWithRank, b: HandWithRank): -1 | 0 | 1 {
     return -1;
   }
 
+  if (a.handRankSecondPart < b.handRankSecondPart) {
+    return 1;
+  }
+
+  if (a.handRankSecondPart > b.handRankSecondPart) {
+    return -1;
+  }
+
   if (a.kickerRank < b.kickerRank) {
     return 1;
   }
